@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mkl.hengyimes.user.mapper.AuthoritiesMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mkl.hengyimes.user.entity.Authorities">
+        <id column="authority" property="authority" />
+        <result column="authority_name" property="authorityName" />
+        <result column="parent_name" property="parentName" />
+        <result column="sort" property="sort" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        authority, authority_name, parent_name, sort, create_time
+    </sql>
+    <select id="listByUserId" resultType="java.lang.String">
+      select authority from role_authorities where role_id in (
+        select role_id from user_role where user_id = #{userId}
+      )
+    </select>
+    <select id="listByRoleId" resultType="java.lang.String" parameterType="integer">
+        select authority from role_authorities where role_id =#{roleIds}
+    </select>
+
+    <select id="listByRoleIds" resultType="java.lang.String">
+        select authority from sys_role_authorities where role_id in (
+        <foreach collection="roleIds" separator="," item="roleId">
+            #{roleId}
+        </foreach>
+        )
+    </select>
+
+</mapper>
